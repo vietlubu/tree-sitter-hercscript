@@ -1,0 +1,11 @@
+{
+  "grammars": ["grammar.js"],
+  "metadata": {
+    "version": "0.3.0",
+    "name": "hercscript",
+    "scope": "source.hercscript",
+    "file-types": ["hcs", "txt"],
+    "highlights": "queries/highlights.scm",
+    "injection-regex": "^(hercscript|herc)$"
+  }
+}
