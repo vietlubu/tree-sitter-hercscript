@@ -1,11 +1,27 @@
 {
-  "grammars": ["grammar.js"],
+  "grammars": [
+    {
+      "name": "hercscript",
+      "scope": "source.hercscript",
+      "file-types": ["hcs", "txt", "hsc"],
+      "injection-regex": "^(hercscript|herc)$",
+      "path": ".",
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm",
+      "locals": "queries/locals.scm"
+    }
+  ],
   "metadata": {
     "version": "0.3.0",
-    "name": "hercscript",
-    "scope": "source.hercscript",
-    "file-types": ["hcs", "txt"],
-    "highlights": "queries/highlights.scm",
-    "injection-regex": "^(hercscript|herc)$"
+    "license": "MIT",
+    "description": "Tree-sitter grammar for Hercules Script",
+    "authors": [
+      {
+        "name": "Viet Lubu"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/vietlubu/tree-sitter-hercscript"
+    }
   }
 }

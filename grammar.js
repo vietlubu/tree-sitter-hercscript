@@ -7,7 +7,7 @@ module.exports = grammar({
 
     extras: $ => [
         /\s/,
-        $._comment,
+        $.comment,
     ],
 
     rules: {
@@ -32,7 +32,15 @@ module.exports = grammar({
         ),
 
         position: $ => choice(
-            seq($.identifier, ',', $.number, ',', $.number, ',', $.number),
+            seq(
+                field('map', $.identifier),
+                ',',
+                field('x', $.number),
+                ',',
+                field('y', $.number),
+                ',',
+                field('direction', $.number)
+            ),
             '-'
         ), // TODO : direction is optional for portals
 
@@ -53,11 +61,17 @@ module.exports = grammar({
         _statement: $ => choice(
             $.return_statement,
             $.break_stmt,
+            $.continue_stmt,
             $.if_stmt,
             $.switch_stmt,
+            $.for_stmt,
+            $.while_stmt,
+            $.do_while_stmt,
             seq($.function_stmt, ';'),
             $.block,
             seq($.assignment_stmt, ';'),
+            $.label,
+            $.goto_stmt,
             // TODO: other kinds of statements
         ),
 
@@ -85,6 +99,47 @@ module.exports = grammar({
             $._statement,
             optional(seq('else', $._statement))
         )),
+        
+        for_stmt: $ => seq(
+            'for',
+            '(',
+            optional($.assignment_stmt),
+            ';',
+            optional($._expression),
+            ';',
+            optional($.assignment_stmt),
+            ')',
+            $._statement
+        ),
+        
+        while_stmt: $ => seq(
+            'while',
+            '(',
+            $._expression,
+            ')',
+            $._statement
+        ),
+        
+        do_while_stmt: $ => seq(
+            'do',
+            $._statement,
+            'while',
+            '(',
+            $._expression,
+            ')',
+            ';'
+        ),
+        
+        label: $ => seq(
+            choice('OnInit', 'OnInterIfInit', 'OnInterIfInitOnce', /[a-zA-Z_][a-zA-Z0-9_]*/),
+            ':'
+        ),
+        
+        goto_stmt: $ => seq(
+            'goto',
+            $.identifier,
+            ';'
+        ),
 
         switch_stmt: $ => seq(
             'switch',
@@ -100,7 +155,7 @@ module.exports = grammar({
 
         case_stmt: $ => prec.right(seq(
             choice(
-                seq('case', $.number),
+                seq('case', $._expression),
                 'default'
             ),
             ':',
@@ -108,12 +163,18 @@ module.exports = grammar({
         )),
 
         break_stmt: $ => seq(
-            'break;'
+            'break',
+            ';'
+        ),
+        
+        continue_stmt: $ => seq(
+            'continue',
+            ';'
         ),
 
         return_statement: $ => seq(
             'return',
-            $._expression,
+            optional($._expression),
             ';'
         ),
 
@@ -159,7 +220,7 @@ module.exports = grammar({
         ),
 
         // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
-        _comment: $ => token(choice(
+        comment: $ => token(choice(
             seq('//', /(\\[.\n]|[^\\\n])*/),
             seq(
                 '/*',

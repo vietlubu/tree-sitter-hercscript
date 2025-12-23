@@ -101,36 +101,89 @@ This grammar recognizes the following file extensions:
 
 The grammar supports:
 
-- Script labels and goto statements
-- Function definitions and calls
-- Variable declarations and assignments
-- Control flow (if/else, switch/case, while, for, do-while)
-- Built-in commands (mes, close, input, etc.)
-- Comments (single-line // and multi-line /\* \*/)
-- String literals and escape sequences
-- Numeric literals (decimal, hex, octal)
-- Operators and expressions
-- Arrays and array access
+### Core Language Features
+
+- **Comments** - Single-line (`//`) and multi-line (`/* */`) comments exposed as queryable nodes
+- **Keywords** - All control flow keywords (`if`, `else`, `switch`, `case`, `for`, `while`, etc.) are captured
+- **Variables** - Support for all variable types (`.@local`, `$global`, `@temp`, `#account`, `.npc`)
+- **String literals** - Double-quoted strings with escape sequences
+- **Numeric literals** - Decimal numbers (hex and octal planned)
+
+### Control Flow
+
+- **If/Else statements** - With proper keyword highlighting
+- **Switch/Case statements** - Case expressions support any expression type
+- **For loops** - With initialization, condition, and increment
+- **While loops** - Standard while loops
+- **Do-While loops** - Do-while loop support
+- **Labels** - Script labels including special labels (`OnInit`, `OnInterIfInit`, etc.)
+- **Goto statements** - Jump to labels
+- **Break/Continue** - Loop control statements
+- **Return statements** - With optional return values
+
+### NPC Features
+
+- **Script definitions** - Full NPC script syntax with position, sprite, and area
+- **Function calls** - Built-in and user-defined function calls
+- **Parameter lists** - Function parameters and arguments
+
+### Operators
+
+- **Arithmetic** - `+`, `-`, `*`, `/`, `%`
+- **Comparison** - `==`, `!=`, `<`, `>`, `<=`, `>=`, `~=`, `~!`
+- **Logical** - `&&`, `||`
+- **Bitwise** - `&`, `|`, `^`
+- **Assignment** - `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `<<=`, `>>=`, `&=`, `^=`, `|=`
+- **Ternary** - `condition ? true_val : false_val`
 
 ## Example Code
 
 ```hercscript
-// Simple NPC dialog
+// Simple NPC dialog with comments highlighted
 prontera,155,181,5	script	Sample NPC	1_M_01,{
+    /*
+     * Multi-line comment
+     * Initialization code
+     */
 OnInit:
     .npc_name$ = "Sample NPC";
     end;
 
 OnPCLoginEvent:
-    mes "Hello, " + strcharinfo(0) + "!";
+    // Local variables
+    .@level = BaseLevel;
+    .@name$ = strcharinfo(0);
+
+    // Greeting message
+    mes "Hello, " + .@name$ + "!";
     mes "Welcome to Hercules!";
     next;
 
-    if (BaseLevel >= 99) {
+    // If-else with keyword highlighting
+    if (.@level >= 99) {
         mes "You are a veteran player!";
     } else {
         mes "Keep leveling up!";
     }
+
+    // For loop example
+    for (.@i = 0; .@i < 3; .@i += 1) {
+        mes "Loop iteration: " + .@i;
+    }
+
+    // Switch statement
+    switch (.@level) {
+        case 99:
+            mes "Max level reached!";
+            break;
+        case 50:
+            mes "Halfway there!";
+            break;
+        default:
+            mes "Level " + .@level;
+            break;
+    }
+
     close;
 }
 ```
@@ -212,6 +265,24 @@ For issues related to:
 - Zed Editor integration: Check [Zed Documentation](https://zed.dev/docs)
 
 ## Changelog
+
+### v0.4.0 (Latest)
+
+- **Comments now exposed as nodes** - single-line (`//`) and multi-line (`/* */`) comments are now properly highlighted
+- **Keywords exposed** - `if`, `else`, `switch`, `case`, `default`, `for`, `while`, `do`, `break`, `continue`, `goto`, `return` are now captured as keyword nodes
+- **New control flow support**:
+  - `for` loops with initialization, condition, and increment
+  - `while` loops
+  - `do-while` loops
+  - `continue` statements
+  - `goto` statements with labels
+- **Label support** - Script labels (including `OnInit`, `OnInterIfInit`, etc.) are now properly recognized
+- **Improved switch/case** - Case expressions now support any expression, not just numbers
+- **Better operator handling** - All operators properly exposed for syntax highlighting
+- **Enhanced punctuation** - Semicolons, commas, braces, and colons now queryable
+- Built WASM grammar for Zed Editor integration
+- Updated tree-sitter.json to modern schema format
+- Comprehensive test files added
 
 ### v0.3.0
 
