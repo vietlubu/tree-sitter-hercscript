@@ -1,0 +1,41 @@
+{
+  "name": "tree-sitter-hercscript",
+  "version": "0.3.0",
+  "description": "Tree Sitter grammar for Hercules' Scripting Language",
+  "main": "bindings/node",
+  "keywords": [
+    "tree-sitter",
+    "parser",
+    "hercscript",
+    "hercules"
+  ],
+  "author": "Guilherme Menaldo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vietlubu/tree-sitter-hercscript"
+  },
+  "scripts": {
+    "build": "tree-sitter generate && node-gyp build",
+    "test": "tree-sitter test",
+    "electron-build": "electron-rebuild -v 3.1.6",
+    "rebuild-test": "tree-sitter generate && tree-sitter test"
+  },
+  "dependencies": {
+    "nan": "^2.14.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.0",
+    "electron-rebuild": "^1.8.4"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.hercscript",
+      "file-types": [
+        "hcs",
+        "txt"
+      ],
+      "highlights": "queries/highlights.scm"
+    }
+  ]
+}
