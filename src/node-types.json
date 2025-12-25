@@ -667,7 +667,17 @@
   {
     "type": "label",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "logicalop",
@@ -785,6 +795,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "npc_name",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "npc_sprite",
@@ -1031,16 +1046,15 @@
       "required": false,
       "types": [
         {
+          "type": "block",
+          "named": true
+        },
+        {
           "type": "script_def",
           "named": true
         }
       ]
     }
-  },
-  {
-    "type": "string",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "switch_stmt",
@@ -1252,26 +1266,6 @@
     "named": false
   },
   {
-    "type": "\"",
-    "named": false
-  },
-  {
-    "type": "#",
-    "named": false
-  },
-  {
-    "type": "##",
-    "named": false
-  },
-  {
-    "type": "$",
-    "named": false
-  },
-  {
-    "type": "$@",
-    "named": false
-  },
-  {
     "type": "%=",
     "named": false
   },
@@ -1285,10 +1279,6 @@
   },
   {
     "type": "&=",
-    "named": false
-  },
-  {
-    "type": "'",
     "named": false
   },
   {
@@ -1329,14 +1319,6 @@
   },
   {
     "type": "-=",
-    "named": false
-  },
-  {
-    "type": ".",
-    "named": false
-  },
-  {
-    "type": ".@",
     "named": false
   },
   {
@@ -1389,10 +1371,6 @@
   },
   {
     "type": "?",
-    "named": false
-  },
-  {
-    "type": "@",
     "named": false
   },
   {
@@ -1457,10 +1435,6 @@
     "named": false
   },
   {
-    "type": "npc_name",
-    "named": true
-  },
-  {
     "type": "number",
     "named": true
   },
@@ -1471,6 +1445,10 @@
   {
     "type": "script",
     "named": false
+  },
+  {
+    "type": "string",
+    "named": true
   },
   {
     "type": "switch",

@@ -1,22 +1,24 @@
 module.exports = grammar({
     name: 'hercscript',
 
-    externals: $ => [
-        $.npc_name
-    ],
+    // externals: $ => [
+    //     $.npc_name
+    // ],
 
     extras: $ => [
         /\s/,
         $.comment,
     ],
 
-    rules: {
-        source_file: $ => repeat($._header),
+    conflicts: $ => [
+        [$.function_stmt, $._expression],
+    ],
 
-        _header: $ => choice(
-            $.script_def
-            // TODO: other kinds of definitions
-        ),
+    rules: {
+        source_file: $ => repeat(choice(
+            $.script_def,
+            $.block
+        )),
 
         script_def: $ => seq(
             $.position,
@@ -44,9 +46,9 @@ module.exports = grammar({
             '-'
         ), // TODO : direction is optional for portals
 
-        npc_sprite: $ => seq(
-            $._identifier
-        ),
+        npc_name: $ => /[^\t\s,]+/,
+        
+        npc_sprite: $ => /[^\t\s,]+/,
 
         npc_area: $ => seq(
             $.number, ',', $.number
@@ -77,7 +79,7 @@ module.exports = grammar({
 
         function_stmt: $ => seq(
             $.identifier,
-            $.parameter_list,
+            optional($.parameter_list),
         ),
 
         parameter_list: $ => seq(
@@ -131,7 +133,7 @@ module.exports = grammar({
         ),
         
         label: $ => seq(
-            choice('OnInit', 'OnInterIfInit', 'OnInterIfInitOnce', /[a-zA-Z_][a-zA-Z0-9_]*/),
+            choice('OnInit', 'OnInterIfInit', 'OnInterIfInitOnce', $.identifier),
             ':'
         ),
         
@@ -204,19 +206,17 @@ module.exports = grammar({
 
 
         number: $ => /\d+/,
-        string: $ => seq(
-            '"',
-            repeat(token.immediate(prec(1, /[^\\"\n]+/))),
-            '"'
-        ), // TODO : Escaped strings
-        identifier: $ => $._identifier,
-        _identifier: $ => seq(
-            optional(choice(
-                "$@", ".@", "##",
-                "$", "@", ".", "'", "#"
-            )),
-            /[a-zA-Z_0-9]+/,
-            optional('$')
+        string: $ => /"[^"]*"/,
+        identifier: $ => choice(
+            /\$@[a-zA-Z_][a-zA-Z0-9_]*\$?/,
+            /\.@[a-zA-Z_][a-zA-Z0-9_]*\$?/,
+            /##[a-zA-Z_][a-zA-Z0-9_]*\$?/,
+            /\$[a-zA-Z_][a-zA-Z0-9_]*\$?/,
+            /@[a-zA-Z_][a-zA-Z0-9_]*\$?/,
+            /\.[a-zA-Z_][a-zA-Z0-9_]*\$?/,
+            /'[a-zA-Z_][a-zA-Z0-9_]*\$?/,
+            /#[a-zA-Z_][a-zA-Z0-9_]*\$?/,
+            /[a-zA-Z_][a-zA-Z0-9_]*\$?/
         ),
 
         // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
